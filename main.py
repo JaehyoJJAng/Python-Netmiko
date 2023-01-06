@@ -1,19 +1,20 @@
 from netmiko import ConnectHandler
 from config import get_ip
+from typing import Dict,Union,List
 
 class NetworkAutomation :
-  def __init__(self):
-    self.device_ip : list = self.change_list()
+  def __init__(self)-> None:
+    self.device_ip : List[str] = self.change_list()
 
-  def main(self):
+  def main(self)-> None:
     [self.connect_server(dev_ip=dev_ip) for dev_ip in self.device_ip]
 
-  def write_result_to_txt(self,output: str):
+  def write_result_to_txt(self,output: str)-> None:
     with open('./python_logs.txt' , 'a' , encoding='UTF-8') as file :
       file.write(output)
 
-  def connect_server(self,dev_ip: str):
-    ios_sw = {
+  def connect_server(self,dev_ip: str)-> None:
+    ios_sw : Dict[str,Union[str,bool]] = {
       "device_type":"cisco_ios",
       "ip":dev_ip,
       "username":"admin",
@@ -28,7 +29,7 @@ class NetworkAutomation :
     # 네트워크 명령어 수행
     self.execute_network_config(net_connect=net_connect)
 
-  def execute_network_config(self,net_connect):
+  def execute_network_config(self,net_connect)-> None:
     # enable 상태창 들어가기
     net_connect.enable()
 
@@ -38,9 +39,8 @@ class NetworkAutomation :
     # 출력 값 파일로 만들어 저장하기
     self.write_result_to_txt(output=output)
 
-  def change_list(self)-> list:
-    device_ips = get_ip.get_ip(key='ip')
-
+  def change_list(self)-> List[str]:
+    device_ips : List[str] = get_ip.get_ip(key='ip')
     return device_ips
 
 app = NetworkAutomation()
